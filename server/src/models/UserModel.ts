@@ -4,8 +4,7 @@ import { genSalt, hash } from "bcrypt";
 interface IUser {
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
+  name: string;
 }
 
 const UserSchema = new mongoose.Schema<IUser>(
@@ -19,10 +18,7 @@ const UserSchema = new mongoose.Schema<IUser>(
       type: String,
       required: true,
     },
-    firstName: {
-      type: String,
-    },
-    lastName: {
+    name: {
       type: String,
     },
   },

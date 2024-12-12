@@ -24,8 +24,8 @@ const socketSetup = (server: Server) => {
     const messageCreated = await Message.create(message);
 
     const messageData = await Message.findById(messageCreated.id)
-      .populate("sender_id", "id email firstName lastName image")
-      .populate("receiver_id", "id email firstName lastName image");
+      .populate("sender_id", "id email name image")
+      .populate("receiver_id", "id email name image");
 
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("receiveMessage", messageData);

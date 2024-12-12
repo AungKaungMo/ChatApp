@@ -17,7 +17,7 @@ export const searchContacts = async (request: any, response: Response) => {
       $and: [
         { _id: { $ne: request.userId } },
         {
-          $or: [{ firstName: regex }, { lastName: regex }, { email: regex }],
+          $or: [{ name: regex }, { email: regex }],
         },
       ],
     });
@@ -94,8 +94,7 @@ export const getFriendContacts = async (request: any, response: Response) => {
           _id: 1,
           lastMessageTime: 1,
           email: "$contactInfo.email",
-          firstName: "$contactInfo.firstName",
-          lastName: "$contactInfo.lastName",
+          name: "$contactInfo.name",
           imageUrl: "$image.url",
         },
       },

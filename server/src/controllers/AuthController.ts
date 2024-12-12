@@ -38,14 +38,14 @@ export const register = async (
   try {
     const validatedData = registerSchema.parse(request.body);
 
-    const { email, password, firstName, lastName } = validatedData;
+    const { email, password, name } = validatedData;
 
     const existUser = await User.findOne({ email });
     if (existUser) {
       return errorResponse(response, "Error", "Email is already registered.");
     }
 
-    const user = await User.create({ email, password, firstName, lastName });
+    const user = await User.create({ email, password, name });
     sendTokenCookie(response, email, user.id);
 
     return successResponse(response, "User registered successfully", user);
@@ -109,12 +109,10 @@ export const updateProfile = async (request: any, response: Response) => {
   try {
     const validatedData = updateProfileSchema.parse(request.body);
 
-    const { firstName, lastName } = validatedData;
+    const { name } = validatedData;
 
-    console.log(firstName, lastName, "al");
     await User.findByIdAndUpdate(request.userId, {
-      firstName,
-      lastName,
+      name,
     });
     return successResponse(response, "Update user information successfully");
   } catch (error) {
