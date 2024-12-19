@@ -1,16 +1,40 @@
 import { MoreVertical, Search, Video } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { useGetFriendDetail } from "@/hooks/use-friend-contact";
+import { useChatStore } from "@/store/create-chat";
+import { useEffect } from "react";
 
-const ChatHeader = () => {
+interface ChatHeaderProps {
+  name: string;
+}
+
+const ChatHeader = ({name} : ChatHeaderProps) => {
+
+  const { data, isPending } = useGetFriendDetail(name)
+  const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;
+
+  const { setSelectedChatData } = useChatStore()
+ 
+  useEffect(() => {
+    if(data) {
+      setSelectedChatData({
+        _id: data.data?._id,
+        name: data.data?.name,
+        email: data.data?.email,
+        image: data.data?.imageUrl,
+      })
+    }
+  }, [data])
+
   return (
     <div className="flex items-center justify-between border-b p-4">
     <div className="flex items-center gap-3">
       <Avatar className="h-10 w-10">
-        <AvatarImage src="/placeholder-user.jpg" />
-        <AvatarFallback>U</AvatarFallback>
+        <AvatarImage src={data?.data?.imageUrl ? baseUrl + data?.data?.imageUrl : ""} />
+        <AvatarFallback>{data?.data?.name[0]}</AvatarFallback>
       </Avatar>
       <div>
-        <div className="font-medium">Username</div>
+        <div className="font-medium">{data?.data?.name}</div>
         <div className="text-sm text-muted-foreground">Active now</div>
       </div>
     </div>

@@ -5,6 +5,7 @@ interface IMessage {
   receiver_id: mongoose.Types.ObjectId;
   messageType: string;
   content?: string;
+  unread: boolean;
 }
 
 const MessageSchema = new mongoose.Schema<IMessage>(
@@ -29,6 +30,10 @@ const MessageSchema = new mongoose.Schema<IMessage>(
         return this.messageType === "text";
       },
     },
+    unread: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,
@@ -38,8 +43,8 @@ const MessageSchema = new mongoose.Schema<IMessage>(
 MessageSchema.set("toJSON", {
   transform: (_, returnedObject) => {
     delete returnedObject.__v;
-    delete returnedObject.createdAt;
-    delete returnedObject.updatedAt;
+    // delete returnedObject.createdAt;
+    // delete returnedObject.updatedAt;
     return returnedObject;
   },
 });

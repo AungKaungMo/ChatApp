@@ -24,7 +24,7 @@ const Login = () => {
   const onSubmit = (data: LoginFormValues) => {
     loginMutate(data, {
       onSuccess: (userData) => {
-        useLoginStore.setState({ user: userData.data });
+        useLoginStore.getState().setUser(userData.data);
         toast({
           variant: "success",
           title: "Success",

@@ -1,25 +1,25 @@
 import { create } from "zustand";
 
 interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
 }
 
 interface LoginState {
-  user: null | { id: string; name: string; email: string };
+  user: null | { _id: string; name: string; email: string };
   setUser: (user: User) => void;
   clearUser: () => void;
 }
 
 export const useLoginStore = create<LoginState>((set: any) => ({
-  user: JSON.parse(localStorage.getItem("user") || "null"),
+  user: JSON.parse(localStorage.getItem("chat_user") || "null"),
   setUser: (user: User) => {
-    localStorage.setItem("user", JSON.stringify(user));
+    localStorage.setItem("chat_user", JSON.stringify(user));
     set({ user });
   },
   clearUser: () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("chat_user");
     set({ user: null });
   },
 }));

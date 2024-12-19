@@ -25,9 +25,10 @@ const sendTokenCookie = (
 ): void => {
   const token = createToken(email, userId, maxAge);
   response.cookie("jwt", token, {
+    // httpOnly: true,
     maxAge,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
+    sameSite: "strict",
   });
 };
 

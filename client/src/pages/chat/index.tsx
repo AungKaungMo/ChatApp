@@ -1,19 +1,32 @@
-import ChatArea from "./components/chat/ChatArea"
-import ChatNavbar from "./components/chat/ChatNavbar"
-import LeftSidebar from "./components/sidebar/LeftSidebar"
-import RightSidebar from "./components/sidebar/RightSidebar"
+import { useLocation } from "react-router-dom";
+import ChatArea from "./components/chat/ChatArea";
+import ChatNavbar from "./components/chat/ChatNavbar";
+import LeftSidebar from "./components/sidebar/LeftSidebar";
+import AllUserContact from "./components/contacts/AllUserContact";
+// import RightSidebar from "./components/sidebar/RightSidebar"
 
 const index = () => {
+  const location = useLocation();
+
   return (
     <div className="h-[92vh] bg-white font-serif">
-     <ChatNavbar />
-    <div className="grid h-full" style={{ gridTemplateColumns: "300px 1fr 300px" }}>
-      <LeftSidebar />
-      <ChatArea />
-      <RightSidebar />
-    </div>
-  </div>
-  )
-}
+      <ChatNavbar />
 
-export default index
+      {/* 300px 1fr 300px */}
+      {location.pathname.includes("chat") ? (
+        <div
+          className="grid h-full"
+          style={{ gridTemplateColumns: "300px 1fr " }}
+        >
+          <LeftSidebar />
+          <ChatArea />
+        </div>
+      ) : (
+        <AllUserContact />
+      )}
+      {/* <RightSidebar /> */}
+    </div>
+  );
+};
+
+export default index;
