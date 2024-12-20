@@ -13,11 +13,16 @@ export interface AuthResponse {
   status: boolean;
   message: string;
   data: {
-    id: string;
+    _id: string;
     name: string;
     email: string;
-    password: string;
+    // password?: string;
   };
+}
+
+interface LogoutResponse {
+  status: boolean;
+  message: string;
 }
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -48,7 +53,7 @@ const login = async (user: Login): Promise<AuthResponse> => {
   }
 };
 
-const logout = async (): Promise<AuthResponse> => {
+const logout = async (): Promise<LogoutResponse> => {
   try {
     const { data } = await axiosInstance.post("auth/logout");
     return data;
@@ -75,7 +80,7 @@ export const useRegisterUser = () => {
 export const useLogoutUser = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<AuthResponse, Error>({
+  return useMutation<LogoutResponse, Error>({
     mutationFn: logout,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["logoutUser"] });

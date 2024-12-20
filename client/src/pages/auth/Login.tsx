@@ -7,7 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema, LoginFormValues } from "@/schema/auth.schema";
 import { useLoginUser } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast"
-import { useLoginStore } from "@/store/auth.store";
+import { IUser, useLoginStore } from "@/store/auth.store";
 
 const Login = () => {
   const { mutate: loginMutate, isPending: loginLoading } = useLoginUser();
@@ -24,13 +24,16 @@ const Login = () => {
   const onSubmit = (data: LoginFormValues) => {
     loginMutate(data, {
       onSuccess: (userData) => {
-        useLoginStore.getState().setUser(userData.data);
+        console.log(userData.data, 'data')
+        // if(userData.data) {
+        useLoginStore.getState().setUser(userData.data as IUser);
         toast({
           variant: "success",
           title: "Success",
           duration: 1500,
           description: "Login Successfully."
         })
+      // }
       },
       onError: (error: any) => {
         toast({

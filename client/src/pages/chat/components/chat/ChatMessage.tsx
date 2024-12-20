@@ -13,7 +13,7 @@ interface ChatMessageProps {
 const ChatMessage = ({ name }: ChatMessageProps) => {
   const { user } = useLoginStore();
   const scrollRef = useRef<any>();
-  const { data, isPending } = useGetMessageList(name);
+  const { data } = useGetMessageList(name);
   const {
     selectedChatMessages,
     setSelectedChatMessages,
@@ -23,13 +23,12 @@ const ChatMessage = ({ name }: ChatMessageProps) => {
 
   const [activeMessage, setActiveMessage] = useState("");
 
-  console.log(messageList, 'elis')
   const renderMessages = () => {
     let lastDate: Date | null | string = null;
 
     return selectedChatMessages.map((message) => {
       const messageDate = moment(message.createdAt).format("YYYY-MM-DD");
-      const showDate = messageDate !== lastDate;
+      // const showDate = messageDate !== lastDate;
       lastDate = messageDate;
 
       return (
@@ -73,7 +72,7 @@ const ChatMessage = ({ name }: ChatMessageProps) => {
                 message._id === activeMessage ? "block" : "hidden"
               }`}
             >
-              {moment(message.createdAt).format()}
+              {moment(message.createdAt).format("YYYY-MM-DD")}
             </span>
           </div>
         </div>

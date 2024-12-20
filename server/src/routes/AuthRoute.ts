@@ -13,7 +13,7 @@ const router: any = express.Router();
 
 router.route("/register").post(asyncHandler(register));
 router.route("/login").post(asyncHandler(login));
-router.route("/logout").get(asyncHandler(logout));
+router.route("/logout").post(asyncHandler(logout));
 router.route("/user-info").get(verifyToken, asyncHandler(getUserInfo));
 router
   .route("/update-profile/:id")

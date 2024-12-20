@@ -81,7 +81,19 @@ export const login = async (request: Request, response: Response) => {
       return errorResponse(response, "Error", "Password is incorrect.");
     }
     sendTokenCookie(response, email, user.id);
-    return successResponse(response, "User login successfully", user);
+
+    const userFile = await File.find({ model: "Users", model_id: user._id })
+      .limit(1) // Fetch one file only
+      .exec();
+
+    const usr = {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      imageUrl: userFile && userFile.length > 0 ? userFile[0].url : null,
+    };
+
+    return successResponse(response, "User login successfully", usr);
   } catch (error) {
     if (error instanceof z.ZodError) {
       return errorResponse(
@@ -117,13 +129,13 @@ export const updateProfile = async (request: any, response: Response) => {
     });
     return successResponse(response, "Update user information successfully");
   } catch (error) {
+    console.log(error, "error");
     return errorResponse(response, "Error", "Internal server error.", 500);
   }
 };
 
 export const addProfileImage = async (request: any, response: Response) => {
   try {
-    console.log(request.file, "files");
     if (!request.file) {
       return errorResponse(
         response,
@@ -131,6 +143,18 @@ export const addProfileImage = async (request: any, response: Response) => {
         "File is required.",
         400
       );
+    }
+
+    const filedata = await File.find({
+      model: "Users",
+      model_id: request.userId,
+    });
+
+    if (request.file && filedata) {
+      filedata.forEach(async (file) => {
+        unlinkSync(file.url);
+        await File.findByIdAndDelete(file._id);
+      });
     }
 
     const date = Date.now();

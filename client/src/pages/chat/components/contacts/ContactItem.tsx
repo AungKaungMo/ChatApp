@@ -3,16 +3,13 @@ import { IFriendList } from "@/hooks/use-friend-contact";
 import { useChatStore } from "@/store/create-chat";
 import { useNavigate } from "react-router-dom";
 
-const ContactItem = ({ contact }: { contact: IFriendList }) => {
+const ContactItem = ({ contact, nameValue }: { contact: IFriendList, nameValue: string }) => {
   const navigate = useNavigate()
   const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const nameValue = urlParams.get("name");
+
 
   const { setSelectedChatData } = useChatStore()
-
-  console.log(contact, 'contact')
+  
   return contact && (
     <div className={`flex p-3 items-center gap-3 rounded-lg cursor-pointer ${nameValue === contact._id ? 'bg-gray-200' : 'hover:bg-gray-200'}`} onClick={() => {
       setSelectedChatData({
@@ -33,7 +30,7 @@ const ContactItem = ({ contact }: { contact: IFriendList }) => {
         {contact.lastMessageText}
       </div>
     </div>
-    {contact.unread && <div className="w-2 h-2 bg-blue-600 rounded-full" />}
+    {(contact.unread && nameValue !== contact._id) && <div className="w-2 h-2 bg-blue-600 rounded-full" />}
   </div>
   )
 }

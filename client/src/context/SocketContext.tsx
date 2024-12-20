@@ -8,15 +8,20 @@ export const useSocket = () => {
     return useContext(SocketContext)
 }
 
-const SocketContext = createContext<Socket | null>(null);
-const baseUrl = 'http://localhost:8000/';
+export interface SocketContextType {
+    socket: Socket | null;
+    checkIfUserIsActive: (userId: string, callback: (isActive: boolean) => void) => void;
+  }  
+
+const SocketContext = createContext<SocketContextType | null>(null);
+const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;
 
 export const  SocketProvider = ({children}: {
     children: React.ReactNode
 }) => {
     const [socket, setSocket] = useState<Socket | null>(null);
     const { user } = useLoginStore();
-    const { selectedChatData, addMessage } = useChatStore()
+    const { selectedChatData, addMessage, setNewContactAssignStatus } = useChatStore()
     const selectedChatDataRef = React.useRef(selectedChatData);
 
     useEffect(() => {
@@ -28,7 +33,10 @@ export const  SocketProvider = ({children}: {
             const newSocket = io(baseUrl, {
                 withCredentials: true,
                 query: { userId: user._id },
-                transports: ['websocket']
+                transports: ['websocket'],
+                reconnection: true,
+                reconnectionAttempts: 5,
+                reconnectionDelay: 1000
             })
 
             setSocket(newSocket);
@@ -39,9 +47,9 @@ export const  SocketProvider = ({children}: {
 
             const handleRecieveMessage = (message: Message) => {
                 const chatData = selectedChatDataRef.current;
-                console.log(chatData?._id + " === " + message.sender_id?._id +  " === " + message.receiver_id?._id)
                 if((chatData?._id === message.sender_id?._id || chatData?._id === message.receiver_id?._id)) {
                     addMessage(message)
+                    setNewContactAssignStatus(true)
                 }
             }
 
@@ -52,8 +60,14 @@ export const  SocketProvider = ({children}: {
             }
     }, [user?._id, addMessage])
 
+    const checkIfUserIsActive = (userId: string, callback: (isActive: boolean) => void) => {
+        if(socket) {
+            socket.emit("checkIfActive", userId, callback)
+        }
+    }
+
     return (
-        <SocketContext.Provider value={socket}>
+        <SocketContext.Provider value={{socket, checkIfUserIsActive}}>
             {children}
         </SocketContext.Provider>
     )

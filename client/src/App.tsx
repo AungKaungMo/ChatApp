@@ -11,7 +11,6 @@ interface MyChildren {
 
 const PrivateRoute = ({children}: MyChildren) => {
   const { user } = useLoginStore();
-  console.log(user, 'suer')
   return user ? children : <Navigate to="/auth" />
 }
 

@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/api/axiosInstance";
 
 export interface GetFriendListResponse {
@@ -30,6 +30,18 @@ export interface IFriendDetail {
   imageUrl: string;
 }
 
+export interface UnknownFriends extends Omit<IFriendDetail, "imageUrl"> {
+  image: {
+    url: string;
+  };
+}
+
+export interface UnknownFriendsListResponse {
+  status: boolean;
+  message: string;
+  data: UnknownFriends[];
+}
+
 const getFriendList = async () => {
   try {
     const { data } = await axiosInstance.get("contact/friends");
@@ -56,6 +68,34 @@ const getFriendDetail = async (id: string) => {
   }
 };
 
+const getAllUnknownFriends = async () => {
+  try {
+    const { data } = await axiosInstance.get("contact/unknown-friends");
+    return data;
+  } catch (error: any) {
+    if (error.response) {
+      throw error.response.data;
+    } else {
+      throw new Error("Get friend list failed.");
+    }
+  }
+};
+
+const getSearchFriends = async (search: string) => {
+  try {
+    const { data } = await axiosInstance.post("contact/search", {
+      search,
+    });
+    return data;
+  } catch (error: any) {
+    if (error.response) {
+      throw error.response.data;
+    } else {
+      throw new Error("Get friend list failed.");
+    }
+  }
+};
+
 export const useGetFriendList = () => {
   return useQuery<GetFriendListResponse, Error>({
     queryKey: ["friends"],
@@ -67,5 +107,23 @@ export const useGetFriendDetail = (id: string) => {
   return useQuery<GetFriendDetailResponse, Error>({
     queryKey: ["friend-detail", id],
     queryFn: () => getFriendDetail(id),
+  });
+};
+
+export const useGetAllUnknownFriends = () => {
+  return useQuery<UnknownFriendsListResponse, Error>({
+    queryKey: ["unknown-friends"],
+    queryFn: getAllUnknownFriends,
+  });
+};
+
+export const useGetSearchFriends = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<UnknownFriendsListResponse, Error, string>({
+    mutationFn: getSearchFriends,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["search-friends"] });
+    },
   });
 };

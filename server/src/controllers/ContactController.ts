@@ -5,25 +5,138 @@ import Message from "../models/MessageModel";
 import mongoose from "mongoose";
 import File from "../models/FileModel";
 
+export const getAllUnknownFriends = async (
+  request: any,
+  response: Response
+) => {
+  try {
+    const senderIds = await Message.distinct("sender_id");
+    const receiverIds = await Message.distinct("receiver_id");
+
+    const messageUserIds = [...new Set([...senderIds, ...receiverIds])];
+    const contacts = await User.aggregate([
+      {
+        $match: {
+          _id: {
+            $nin: messageUserIds,
+          },
+        },
+      },
+      {
+        $lookup: {
+          from: "files",
+          let: { userId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$model_id", "$$userId"] },
+                    { $eq: ["$model", "Users"] },
+                  ],
+                },
+              },
+            },
+            { $limit: 1 },
+          ],
+          as: "image",
+        },
+      },
+      {
+        $unwind: {
+          path: "$image",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          password: 0,
+          __v: 0,
+          createdAt: 0,
+          updatedAt: 0,
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
+
+    return successResponse(response, "Get contacts successfully.", contacts);
+  } catch (error) {
+    return errorResponse(response, "Error", "Internal server error", 500);
+  }
+};
+
 export const searchContacts = async (request: any, response: Response) => {
   try {
-    const { searchText } = request.body;
+    const { search } = request.body;
     const userId = new mongoose.Types.ObjectId(request.userId);
-    if (!searchText)
+    if (!search)
       return errorResponse(response, "Error", "Search text is required.");
 
-    const checkSearchText = searchText.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const checkSearchText = search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
     const regex = new RegExp(checkSearchText, "i");
 
-    const contacts = await User.find({
-      $and: [
-        { _id: { $ne: userId } },
-        {
-          $or: [{ name: regex }, { email: regex }],
+    // const contacts = await User.find({
+    //   $and: [
+    //     { _id: { $ne: userId } },
+    //     {
+    //       $or: [{ name: regex }, { email: regex }],
+    //     },
+    //   ],
+    // });
+
+    const contacts = await User.aggregate([
+      {
+        $match: {
+          $and: [
+            { _id: { $ne: userId } },
+            {
+              $or: [{ name: regex }, { email: regex }],
+            },
+          ],
         },
-      ],
-    });
+      },
+      {
+        $lookup: {
+          from: "files",
+          let: { userId: "$_id" },
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  $and: [
+                    { $eq: ["$model_id", "$$userId"] },
+                    { $eq: ["$model", "Users"] },
+                  ],
+                },
+              },
+            },
+            { $limit: 1 },
+          ],
+          as: "image",
+        },
+      },
+      {
+        $unwind: {
+          path: "$image",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $project: {
+          password: 0,
+          __v: 0,
+          createdAt: 0,
+          updatedAt: 0,
+        },
+      },
+      {
+        $sort: { createdAt: -1 },
+      },
+    ]);
+
     return successResponse(response, "Get contacts successfully.", contacts);
   } catch (error) {
     return errorResponse(response, "Error", "Internal server error", 500);
@@ -32,7 +145,7 @@ export const searchContacts = async (request: any, response: Response) => {
 
 export const getFriendContacts = async (request: any, response: Response) => {
   try {
-    const userId = new mongoose.Types.ObjectId(request.userId);
+    const userId: object = new mongoose.Types.ObjectId(request.userId);
     const contacts = await Message.aggregate([
       {
         $match: {

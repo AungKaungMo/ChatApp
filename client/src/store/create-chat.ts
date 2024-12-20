@@ -29,6 +29,7 @@ interface ChatState {
   selectedChatType: string;
   selectedChatData: SelectedChatData | null;
   selectedChatMessages: Message[];
+  newContactAssignStatus: boolean;
 }
 
 interface ChatActions {
@@ -37,6 +38,7 @@ interface ChatActions {
   setSelectedChatMessages: (messages: Message[]) => void;
   closeChat: () => void;
   addMessage: (message: Message) => void;
+  setNewContactAssignStatus: (status: boolean) => void;
 }
 
 type ChatStore = ChatState & ChatActions;
@@ -45,24 +47,14 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   // Initial state
   selectedChatType: "",
   selectedChatData: null,
-  selectedChatMessages: [
-    // {
-    //   _id: "8483hfhaf",
-    //   messageType: "text",
-    //   sender_id: "jfeaoijfeoh",
-    //   receiver_id: "Jovbuav",
-    //   content: "Hello world hi",
-    //   timestamp: "2024-05-03",
-    //   unread: false,
-    // },
-  ],
+  selectedChatMessages: [],
+  newContactAssignStatus: false,
 
   // Setters
   setSelectedChatType: (selectedChatType: string) => set({ selectedChatType }),
 
   setSelectedChatData: (selectedChatData: SelectedChatData) => {
     set({ selectedChatData });
-    console.log(selectedChatData, "seleted");
   },
 
   setSelectedChatMessages: (selectedChatMessages: Message[]) =>
@@ -88,5 +80,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     set({
       selectedChatMessages: [...selectedChatMessages, updatedMessage],
     });
+  },
+
+  setNewContactAssignStatus: (status: boolean) => {
+    set({ newContactAssignStatus: status });
   },
 }));

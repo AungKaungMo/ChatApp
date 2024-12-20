@@ -9,7 +9,7 @@ const index = () => {
   const location = useLocation();
 
   return (
-    <div className="h-[92vh] bg-white font-serif">
+    <div className="h-[90vh] bg-white font-serif">
       <ChatNavbar />
 
       {/* 300px 1fr 300px */}

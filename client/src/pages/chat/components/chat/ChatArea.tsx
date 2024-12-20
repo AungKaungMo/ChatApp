@@ -52,13 +52,14 @@ const ChatArea = () => {
 
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col h-[91vh]">
     {name && <ChatHeader name={name}/>}
     <ScrollArea className="flex-1 p-4">
       {/* Chat messages can be dynamically rendered here */}
       {name && <ChatMessage name={name}/>}
     </ScrollArea>
-    <ChatInput  />
+    {name && 
+    <ChatInput  />}
   </div>
 
   )

@@ -1,20 +1,20 @@
-import { MoreVertical, Search, Video } from "lucide-react"
+// import { MoreVertical, Search, Video } from "lucide-react"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { useGetFriendDetail } from "@/hooks/use-friend-contact";
 import { useChatStore } from "@/store/create-chat";
-import { useEffect } from "react";
-
+import { useEffect, useState } from "react";
+import { SocketContextType, useSocket } from "@/context/SocketContext";
 interface ChatHeaderProps {
   name: string;
 }
 
 const ChatHeader = ({name} : ChatHeaderProps) => {
 
-  const { data, isPending } = useGetFriendDetail(name)
+  const { data } = useGetFriendDetail(name)
   const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;
-
+  const { checkIfUserIsActive } = useSocket() as SocketContextType
   const { setSelectedChatData } = useChatStore()
- 
+  const [userActive, setUserActive] = useState(false)
   useEffect(() => {
     if(data) {
       setSelectedChatData({
@@ -26,6 +26,16 @@ const ChatHeader = ({name} : ChatHeaderProps) => {
     }
   }, [data])
 
+  useEffect(() => {
+    checkIfUserIsActive(name, (isActive) => {
+      // if(isActive) {
+        setUserActive(isActive)
+      // }else {
+      //   setUserActive(false)
+      // }
+    })
+  })
+
   return (
     <div className="flex items-center justify-between border-b p-4">
     <div className="flex items-center gap-3">
@@ -35,10 +45,10 @@ const ChatHeader = ({name} : ChatHeaderProps) => {
       </Avatar>
       <div>
         <div className="font-medium">{data?.data?.name}</div>
-        <div className="text-sm text-muted-foreground">Active now</div>
+        {userActive && <div className="text-sm text-muted-foreground">Active now</div>}
       </div>
     </div>
-    <div className="flex items-center gap-3">
+    {/* <div className="flex items-center gap-3">
       <button className="btn-ghost">
         <Search className="h-5 w-5" />
       </button>
@@ -48,7 +58,7 @@ const ChatHeader = ({name} : ChatHeaderProps) => {
       <button className="btn-ghost">
         <MoreVertical className="h-5 w-5" />
       </button>
-    </div>
+    </div> */}
   </div>
   )
 }

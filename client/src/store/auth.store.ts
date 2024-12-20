@@ -1,20 +1,21 @@
 import { create } from "zustand";
 
-interface User {
+export interface IUser {
   _id: string;
   name: string;
   email: string;
+  imageUrl: string;
 }
 
 interface LoginState {
-  user: null | { _id: string; name: string; email: string };
-  setUser: (user: User) => void;
+  user: null | { _id: string; name: string; email: string; imageUrl?: string };
+  setUser: (user: IUser) => void;
   clearUser: () => void;
 }
 
 export const useLoginStore = create<LoginState>((set: any) => ({
   user: JSON.parse(localStorage.getItem("chat_user") || "null"),
-  setUser: (user: User) => {
+  setUser: (user: IUser) => {
     localStorage.setItem("chat_user", JSON.stringify(user));
     set({ user });
   },
