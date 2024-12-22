@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { genSalt, hash } from "bcrypt";
+import { genSalt, hash } from "bcryptjs";
 
 interface IUser {
   email: string;
@@ -28,9 +28,14 @@ const UserSchema = new mongoose.Schema<IUser>(
 );
 
 UserSchema.pre("save", async function (next) {
-  const salt = await genSalt();
-  this.password = await hash(this.password, salt);
-  next();
+  try {
+    const salt = await genSalt(10);
+    const hashedPassword = await hash(this.password, salt);
+    this.password = hashedPassword;
+    next();
+  } catch (error: any) {
+    next(error);
+  }
 });
 
 UserSchema.set("toJSON", {

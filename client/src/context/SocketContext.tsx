@@ -9,9 +9,10 @@ export const useSocket = () => {
 }
 
 export interface SocketContextType {
+    [x: string]: any;
     socket: Socket | null;
     checkIfUserIsActive: (userId: string, callback: (isActive: boolean) => void) => void;
-  }  
+}  
 
 const SocketContext = createContext<SocketContextType | null>(null);
 const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;

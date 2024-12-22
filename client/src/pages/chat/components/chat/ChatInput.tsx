@@ -1,8 +1,8 @@
-import { Paperclip, Send } from "lucide-react";
+import { Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
 import { useChatStore } from "@/store/create-chat";
-import { useSocket } from "@/context/SocketContext";
+import { SocketContextType, useSocket } from "@/context/SocketContext";
 import { useLoginStore } from "@/store/auth.store";
 import { useRef } from "react";
 
@@ -10,7 +10,7 @@ const ChatInput = () => {
   const [message, setMessage] = useState("");
   const { selectedChatData } = useChatStore();
   const { user } = useLoginStore();
-  const socket = useSocket();
+  const socket = useSocket() as SocketContextType;
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleMessaging = (e: any) => {
@@ -24,8 +24,7 @@ const ChatInput = () => {
   };
 
   const sendMessage = () => {
-    // if(selectedChatType === "contact") {
-    socket?.emit(
+    socket.socket?.emit(
       "sendMessage",
       {
         sender_id: user?._id,

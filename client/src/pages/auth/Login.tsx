@@ -24,7 +24,6 @@ const Login = () => {
   const onSubmit = (data: LoginFormValues) => {
     loginMutate(data, {
       onSuccess: (userData) => {
-        console.log(userData.data, 'data')
         // if(userData.data) {
         useLoginStore.getState().setUser(userData.data as IUser);
         toast({
@@ -52,7 +51,7 @@ const Login = () => {
         <Label htmlFor="email">Email</Label>
         <Input
           id="email"
-          type="email"
+          type="text"
           placeholder="m@example.com"
           {...register("email")}
         />

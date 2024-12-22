@@ -1,0 +1,48 @@
+services:
+  server:
+    build: ./server
+    container_name: chatserverapp
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    depends_on:
+      - mongo
+    networks:
+      - chat_network
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/chat-app
+      - PORT=9000
+      - ORIGIN=http://localhost:3000
+
+  client:
+    build: ./client
+    container_name: chatclientapp
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    networks:
+      - chat_network
+    environment:
+      - VITE_APP_BASE_IMAGE_URL=http://localhost:9000/
+      - VITE_APP_BASE_URL=http://localhost:9000/api/
+
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    # ports:
+    #   - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - chat_network
+
+volumes:
+  mongo-data:
+
+networks:
+  chat_network:
+    driver: bridge

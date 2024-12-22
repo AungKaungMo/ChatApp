@@ -24,12 +24,12 @@ const ChatMessage = ({ name }: ChatMessageProps) => {
   const [activeMessage, setActiveMessage] = useState("");
 
   const renderMessages = () => {
-    let lastDate: Date | null | string = null;
+    // let lastDate: Date | null | string = null;
 
     return selectedChatMessages.map((message) => {
-      const messageDate = moment(message.createdAt).format("YYYY-MM-DD");
+      // const messageDate = moment(message.createdAt).format("YYYY-MM-DD");
       // const showDate = messageDate !== lastDate;
-      lastDate = messageDate;
+      // lastDate = messageDate;
 
       return (
         <div

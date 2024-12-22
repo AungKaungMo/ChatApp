@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/UserModel";
 import { createToken } from "../utilities/token";
-import { compare } from "bcrypt";
+import bcrypt from "bcryptjs";
 import {
   loginSchema,
   registerSchema,
@@ -47,6 +47,7 @@ export const register = async (
     }
 
     const user = await User.create({ email, password, name });
+
     sendTokenCookie(response, email, user.id);
 
     return successResponse(response, "User registered successfully", user);
@@ -68,6 +69,7 @@ export const login = async (request: Request, response: Response) => {
     const { email, password } = validatedData;
 
     const user = await User.findOne({ email });
+
     if (!user) {
       return errorResponse(
         response,
@@ -76,7 +78,7 @@ export const login = async (request: Request, response: Response) => {
       );
     }
 
-    const auth = await compare(password, user.password);
+    const auth = bcrypt.compare(password, user.password);
     if (!auth) {
       return errorResponse(response, "Error", "Password is incorrect.");
     }
@@ -129,7 +131,6 @@ export const updateProfile = async (request: any, response: Response) => {
     });
     return successResponse(response, "Update user information successfully");
   } catch (error) {
-    console.log(error, "error");
     return errorResponse(response, "Error", "Internal server error.", 500);
   }
 };

@@ -35,7 +35,6 @@ const AllUserContact = () => {
           }
   })
       }else {
-        console.log('youh reach there???', data?.data)
         setContactList(data?.data || []);
       }
     }, 600), 
