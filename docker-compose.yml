@@ -1,12 +1,20 @@
 services:
+  client:
+    image: aungkaungmoe/chatapp-client:latest
+    container_name: chatclientapp
+    ports:
+      - "3000:3000"
+    networks:
+      - chat_network
+    environment:
+      - VITE_APP_BASE_IMAGE_URL=http://localhost:9000/
+      - VITE_APP_BASE_URL=http://localhost:9000/api/
+
   server:
-    build: ./server
+    image: aungkaungmoe/chatapp-server:latest
     container_name: chatserverapp
     ports:
       - "9000:9000"
-    volumes:
-      - ./server:/app
-      - /app/node_modules
     depends_on:
       - mongo
     networks:
@@ -16,25 +24,9 @@ services:
       - PORT=9000
       - ORIGIN=http://localhost:3000
 
-  client:
-    build: ./client
-    container_name: chatclientapp
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./client:/app
-      - /app/node_modules
-    networks:
-      - chat_network
-    environment:
-      - VITE_APP_BASE_IMAGE_URL=http://localhost:9000/
-      - VITE_APP_BASE_URL=http://localhost:9000/api/
-
   mongo:
     image: mongo:latest
     container_name: mongo
-    # ports:
-    #   - "27017:27017"
     volumes:
       - mongo-data:/data/db
     networks:
