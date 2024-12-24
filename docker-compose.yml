@@ -26,9 +26,22 @@ services:
 
   mongo:
     image: mongo:latest
-    container_name: mongo
+    container_name: chat-mongo
     volumes:
       - mongo-data:/data/db
+    networks:
+      - chat_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: chat-nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - client
+      - server
     networks:
       - chat_network
 
