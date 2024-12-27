@@ -23,6 +23,10 @@ services:
       - PORT=${PORT}
       - JWT_KEY=${JWT_KEY}
       - ORIGIN=${ORIGIN}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "${HEALTHCHECK_URL}"]
+      interval: 10s
+      retries: 5
 
   mongo:
     image: mongo:latest
