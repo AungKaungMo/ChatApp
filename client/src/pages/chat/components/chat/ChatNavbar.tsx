@@ -30,7 +30,7 @@ const ChatNavbar = () => {
   const [isOpen, setIsOpen] = useState(false)
   const { toast } = useToast();
   const { data, mutate: logoutUser } = useLogoutUser();
-  const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;
+  const baseUrl = import.meta.env.VITE_APP_BASE_URL;
   const [updatedName, setUpdatedName] = useState(user?.name || ""); // Manage the updated name
   const { mutate: updateProfile } = useUpdateProfile();
   useEffect(() => {

@@ -12,7 +12,7 @@ const AllUserContact = () => {
   const { data } = useGetAllUnknownFriends();
   const [search, setSearch] = useState("");
   const { mutate: searchMutate } = useGetSearchFriends();
-  const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;
+  const baseUrl = import.meta.env.VITE_APP_BASE_URL;
 
   const [contactList, setContactList] = useState(data?.data || []);
   const { toast } = useToast()

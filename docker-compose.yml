@@ -7,8 +7,7 @@ services:
     networks:
       - chat_network
     environment:
-      - VITE_APP_BASE_IMAGE_URL=http://localhost:9000/
-      - VITE_APP_BASE_URL=http://localhost:9000/api/
+      - VITE_APP_BASE_URL=${VITE_APP_BASE_URL}
 
   server:
     image: aungkaungmoe/chatapp-server:latest
@@ -20,9 +19,10 @@ services:
     networks:
       - chat_network
     environment:
-      - MONGO_URI=mongodb://mongo:27017/chat-app
-      - PORT=9000
-      - ORIGIN=http://localhost:3000
+      - MONGO_URI=${MONGO_URI}
+      - PORT=${PORT}
+      - JWT_KEY=${JWT_KEY}
+      - ORIGIN=${ORIGIN}
 
   mongo:
     image: mongo:latest

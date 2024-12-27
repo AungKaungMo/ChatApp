@@ -13,8 +13,11 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 9000;
 const databaseURL = process.env.MONGO_URI || "";
-app.use("/uploads/files", express.static(path.resolve("uploads/files")));
-app.use("/uploads/profiles", express.static(path.resolve("uploads/profiles")));
+app.use("/api/uploads/files", express.static(path.resolve("uploads/files")));
+app.use(
+  "/api/uploads/profiles",
+  express.static(path.resolve("uploads/profiles"))
+);
 app.use(
   cors({
     origin: [process.env.ORIGIN || "*"],

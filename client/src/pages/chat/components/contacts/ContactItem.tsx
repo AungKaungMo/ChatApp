@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const ContactItem = ({ contact, nameValue }: { contact: IFriendList, nameValue: string }) => {
   const navigate = useNavigate()
-  const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;
+  const baseUrl = import.meta.env.VITE_APP_BASE_URL;
 
 
   const { setSelectedChatData } = useChatStore()

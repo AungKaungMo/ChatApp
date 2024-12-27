@@ -106,7 +106,6 @@ npm install
 
 ```bash
 VITE_APP_BASE_URL=backend_url(eg.http://localhost:9000/api/)
-VITE_APP_BASE_IMAGE_URL=backend_url(eg.http://localhost:9000)
 ```
 
 3. Start the React development server:

@@ -11,7 +11,7 @@ interface ChatHeaderProps {
 const ChatHeader = ({name} : ChatHeaderProps) => {
 
   const { data } = useGetFriendDetail(name)
-  const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;
+  const baseUrl = import.meta.env.VITE_APP_BASE_URL;
   const { checkIfUserIsActive } = useSocket() as SocketContextType
   const { setSelectedChatData } = useChatStore()
   const [userActive, setUserActive] = useState(false)

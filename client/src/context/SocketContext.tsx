@@ -15,7 +15,7 @@ export interface SocketContextType {
 }  
 
 const SocketContext = createContext<SocketContextType | null>(null);
-const baseUrl = import.meta.env.VITE_APP_BASE_IMAGE_URL;
+const baseUrl = import.meta.env.VITE_APP_BASE_URL;
 
 export const  SocketProvider = ({children}: {
     children: React.ReactNode
