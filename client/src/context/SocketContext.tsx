@@ -15,7 +15,7 @@ export interface SocketContextType {
 }  
 
 const SocketContext = createContext<SocketContextType | null>(null);
-const baseUrl = import.meta.env.VITE_APP_BASE_URL;
+const baseUrl = import.meta.env.VITE_APP_SOCKET_URL;
 
 export const  SocketProvider = ({children}: {
     children: React.ReactNode
@@ -35,6 +35,7 @@ export const  SocketProvider = ({children}: {
                 withCredentials: true,
                 query: { userId: user._id },
                 transports: ['websocket'],
+                path: "/socket.io/",
                 reconnection: true,
                 reconnectionAttempts: 5,
                 reconnectionDelay: 1000
