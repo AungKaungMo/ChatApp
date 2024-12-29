@@ -60,29 +60,30 @@ A real-time messaging app built with Node.js, Express, MongoDB, React, and TypeS
 ```bash
 git clone https://github.com/AungKaungMo/ChatApp.git  
 ```
-
-2. Navigate to the backend directory:
-
-```bash
-cd ChatApp/server  
-```
-
-3. Install dependencies:
-
-```bash
-npm install  
-```
-
-4. Create a .env file and add the following environment variables:
+2. Create a .env file and add the following environment variables:
 
 ```bash
 MONGO_URI=your_mongodb_connection_string  
 JWT_KEY=your_jwt_secret_key  
 PORT=9000
 ORIGIN=frontend_ip-address
+VITE_APP_BASE_URL=backend_url(eg.http://localhost:9000/api/)
+VITE_APP_SOCKET_URL=backend_url(eg.http://localhost:9000)
 ```
 
-5. Create a .env file and add the following environment variables:
+3. Navigate to the backend directory:
+
+```bash
+cd ChatApp/server  
+```
+
+4. Install dependencies:
+
+```bash
+npm install  
+```
+
+5. Run the server:
 
 ```bash
 npm run dev 
@@ -100,12 +101,6 @@ cd chatapp/client
 
 ```bash
 npm install 
-```
-
-3, Create a .env file and add the following environment variables:
-
-```bash
-VITE_APP_BASE_URL=backend_url(eg.http://localhost:9000/api/)
 ```
 
 3. Start the React development server:

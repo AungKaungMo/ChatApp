@@ -19,8 +19,6 @@ RUN npm install
 
 COPY . .
 
-RUN tsc 
-
 EXPOSE 9000
 
 CMD ["npm", "run", "dev"]

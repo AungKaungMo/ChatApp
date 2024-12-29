@@ -10,7 +10,7 @@ import {
 import { z } from "zod";
 import { formatZodErrors } from "../utilities/zod-error-format";
 import { errorResponse, successResponse } from "../utilities/response";
-import { renameSync, unlinkSync } from "fs";
+import { renameSync } from "fs";
 import File from "../models/FileModel";
 
 const maxAge = 3 * 24 * 60 * 60 * 1000;
@@ -151,15 +151,15 @@ export const addProfileImage = async (request: any, response: Response) => {
       model_id: request.userId,
     });
 
-    if (request.file && filedata) {
-      filedata.forEach(async (file) => {
-        unlinkSync(file.url);
-        await File.findByIdAndDelete(file._id);
-      });
-    }
+    // if (request.file && filedata) {
+    //   filedata.forEach(async (file) => {
+    //     unlinkSync(file.url);
+    //     await File.findByIdAndDelete(file._id);
+    //   });
+    // }
 
     const date = Date.now();
-    let fileName = "uploads/profiles/" + date + request.file.originalname;
+    let fileName = "api/uploads/profiles/" + date + request.file.originalname;
 
     const fileExtension = request.file.originalname
       .split(".")
@@ -202,7 +202,7 @@ export const removeProfileImage = async (request: any, response: Response) => {
     const file = await File.findById(fileId);
     if (!file) return errorResponse(response, "Error", "File not found", 404);
 
-    unlinkSync(file.url);
+    // unlinkSync(file.url);
     await File.findByIdAndDelete(fileId);
     return successResponse(response, "File deleted successfully.");
   } catch (error) {
